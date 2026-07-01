@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blindspot — Escalá tu negocio online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Mono&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --gold:#C8A84B;
+  --gold-2:#E6CD86;
+  --gold-3:#F4E8C4;
+  --bg:#060605;
+  --bg-1:#0B0B0A;
+  --bg-glass:rgba(255,255,255,0.04);
+  --line:rgba(255,255,255,0.07);
+  --line-2:rgba(255,255,255,0.13);
+  --text:#F4EFE6;
+  --muted:#56544D;
+  --muted-2:#928A7E;
+  --font-sans:'Hanken Grotesk',system-ui,sans-serif;
+  --font-serif:'Fraunces',Georgia,serif;
+  --font-mono:'Space Mono',monospace;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+
+html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%}
+
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-sans);font-size:16px;line-height:1.6;font-weight:400;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;position:relative;
+}
+a,button{-webkit-tap-highlight-color:transparent}
+em{font-family:var(--font-serif);font-style:italic;font-weight:400}
+
+/* ── BACKGROUND FX ── */
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.grain{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── SCROLL PROGRESS ── */
+.progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:200;background:linear-gradient(90deg,var(--gold),var(--gold-2));transition:width 80ms linear}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;padding:0 44px;height:66px;
+  border-bottom:1px solid transparent;background:transparent;
+  transition:background 400ms var(--ease),border-color 400ms var(--ease),backdrop-filter 400ms var(--ease),height 300ms var(--ease);
+}
+nav.scrolled{height:58px;background:rgba(6,6,5,0.55);border-bottom:1px solid var(--line);backdrop-filter:blur(26px) saturate(150%);-webkit-backdrop-filter:blur(26px) saturate(150%)}
+.logo{font-size:16px;font-weight:600;letter-spacing:0.16em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:11px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 14px 1px rgba(200,168,75,0.7);animation:pulse 2.8s var(--ease) infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+.nav-right{display:flex;align-items:center;gap:30px}
+.nav-link{position:relative;font-size:14px;color:var(--muted-2);text-decoration:none;transition:color 180ms ease}
+.nav-link::after{content:'';position:absolute;left:0;bottom:-5px;width:0;height:1px;background:var(--gold);transition:width 240ms var(--ease)}
+.nav-link:hover{color:var(--text)}
+.nav-link:hover::after{width:100%}
+.nav-btn{font-size:13px;font-weight:600;letter-spacing:0.02em;color:#0a0906;background:var(--gold);padding:11px 22px;border:none;cursor:pointer;text-decoration:none;display:inline-block;border-radius:100px;transition:background 180ms ease,transform 140ms var(--ease),box-shadow 240ms ease}
+.nav-btn:hover{background:var(--gold-2);box-shadow:0 6px 26px -6px rgba(200,168,75,0.5)}
+.nav-btn:active{transform:scale(0.96)}
+
+/* ── HERO ── */
+#hero{position:relative;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px 24px 90px;overflow:hidden}
+.hero-glow{position:absolute;top:40%;left:50%;width:min(1000px,118vw);height:min(640px,76vh);transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(200,168,75,0.15),rgba(200,168,75,0.04) 42%,transparent 70%);filter:blur(24px);pointer-events:none;z-index:0;animation:breathe 9s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:0.8;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.07)}}
+.hero-inner{position:relative;z-index:2;max-width:940px;width:100%}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted-2);
+  padding:9px 18px;border:1px solid var(--line-2);border-radius:100px;background:var(--bg-glass);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+  margin-bottom:2.75rem;opacity:0;animation:up 800ms var(--ease) 100ms forwards;
+}
+.hero-badge .b-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px 1px rgba(200,168,75,0.7)}
+.hero-badge b{color:var(--text);font-weight:400}
+
+.hero-h1{font-size:clamp(44px,6.6vw,90px);font-weight:500;line-height:1.03;letter-spacing:-0.025em;margin-bottom:1.85rem}
+.hero-h1 .ln{display:block;overflow:hidden}
+.hero-h1 .ln > span{display:inline-block;opacity:0;transform:translateY(110%);animation:reveal 950ms var(--ease) forwards}
+.hero-h1 .ln:nth-child(1) > span{animation-delay:240ms}
+.hero-h1 .ln:nth-child(2) > span{animation-delay:350ms}
+.hero-h1 .ln:nth-child(3) > span{animation-delay:460ms}
+@keyframes reveal{to{opacity:1;transform:translateY(0)}}
+
+.shine{background:linear-gradient(100deg,var(--gold) 0%,var(--gold-2) 30%,var(--gold-3) 50%,var(--gold-2) 70%,var(--gold) 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:200% center}}
+
+.hero-p{font-size:clamp(16px,1.4vw,19px);color:var(--muted-2);line-height:1.65;max-width:540px;margin:0 auto 3rem;opacity:0;animation:up 800ms var(--ease) 580ms forwards}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;opacity:0;animation:up 800ms var(--ease) 680ms forwards}
+
+.btn-main{position:relative;font-size:14px;font-weight:600;letter-spacing:0.01em;color:#0a0906;background:var(--gold);padding:16px 32px;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:9px;border-radius:100px;overflow:hidden;transition:transform 160ms var(--ease),box-shadow 280ms ease,background 200ms ease;box-shadow:0 8px 30px -10px rgba(200,168,75,0.5);will-change:transform}
+.btn-main::after{content:'';position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,0.5),transparent);transform:skewX(-18deg)}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 14px 42px -8px rgba(200,168,75,0.6);background:var(--gold-2)}
+.btn-main:hover::after{animation:sweep 780ms var(--ease) forwards}
+@keyframes sweep{to{left:160%}}
+.btn-main:active{transform:translateY(0) scale(0.97)}
+.btn-ghost{font-size:14px;color:var(--muted-2);text-decoration:none;display:inline-flex;align-items:center;gap:8px;padding:16px 6px;transition:color 180ms ease}
+.btn-ghost svg{transition:transform 200ms var(--ease)}
+.btn-ghost:hover{color:var(--text)}
+.btn-ghost:hover svg{transform:translateX(4px)}
+
+/* glass stats */
+.hero-stats{display:flex;align-items:stretch;justify-content:center;margin:4.75rem auto 0;max-width:780px;border-radius:16px;overflow:hidden;background:var(--bg-glass);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border:1px solid var(--line-2);box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),0 30px 70px -40px rgba(0,0,0,0.9);opacity:0;animation:up 800ms var(--ease) 820ms forwards}
+.hs{flex:1;padding:28px 20px;border-right:1px solid var(--line);transition:background 300ms ease}
+.hs:last-child{border-right:none}
+.hs:hover{background:rgba(200,168,75,0.05)}
+.hs-num{font-family:var(--font-mono);font-size:clamp(26px,3vw,38px);font-weight:400;color:var(--gold);line-height:1;letter-spacing:-0.02em;margin-bottom:9px}
+.hs-label{font-size:12px;color:var(--muted-2);line-height:1.45}
+
+.scroll-cue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:2;font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:11px;opacity:0;animation:fade 800ms ease 1100ms forwards}
+.scroll-cue .line{width:1px;height:38px;background:linear-gradient(var(--gold),transparent);position:relative;overflow:hidden}
+.scroll-cue .line::after{content:'';position:absolute;top:-50%;left:0;width:100%;height:50%;background:var(--gold);animation:drop 1.9s var(--ease) infinite}
+@keyframes drop{0%{top:-50%}100%{top:100%}}
+
+/* ── KEYWORDS BAND (static, minimal) ── */
+.kw{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px 26px;padding:24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,0.012)}
+.kw span{font-family:var(--font-mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted-2);display:inline-flex;align-items:center;gap:26px}
+.kw span::after{content:'';width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:0.55}
+.kw span:last-child::after{display:none}
+
+/* ── MANIFESTO ── */
+#manifesto{padding:150px 24px;max-width:1000px;margin:0 auto;text-align:center}
+.manifesto-txt{font-size:clamp(27px,3.6vw,48px);font-weight:400;line-height:1.34;letter-spacing:-0.015em;color:var(--muted)}
+.manifesto-txt .w{display:inline-block;opacity:0.16;transition:opacity 600ms var(--ease)}
+.manifesto-txt .w.lit{opacity:1;color:var(--text)}
+.manifesto-txt em{color:var(--gold)!important;font-weight:300}
+
+/* ── SECTIONS ── */
+.section{max-width:1240px;margin:0 auto;padding:130px 44px}
+.s-label{font-family:var(--font-mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;display:inline-flex;align-items:center;gap:12px}
+.s-label::before{content:'';width:24px;height:1px;background:var(--gold)}
+.s-h2{font-size:clamp(36px,4vw,60px);font-weight:500;letter-spacing:-0.025em;line-height:1.07;margin-bottom:1.25rem}
+.s-h2 em{font-weight:300;color:var(--muted-2)}
+.s-p{font-size:17px;color:var(--muted-2);max-width:480px;line-height:1.7}
+
+.rev{opacity:0;transform:translateY(28px);transition:opacity 750ms var(--ease),transform 750ms var(--ease)}
+.rev.vis{opacity:1;transform:translateY(0)}
+
+/* ── RESULTS ── */
+#resultados .inner{display:grid;grid-template-columns:0.85fr 1.15fr;gap:84px;margin-top:76px;align-items:start}
+.r-header{position:sticky;top:100px}
+.results-list{display:flex;flex-direction:column}
+.r-item{position:relative;padding:36px 30px;border:1px solid var(--line);border-radius:16px;margin-bottom:14px;background:rgba(255,255,255,0.014);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow:hidden;transition:border-color 300ms ease,transform 400ms var(--ease)}
+.r-item::before{content:'';position:absolute;inset:0;border-radius:16px;pointer-events:none;opacity:0;background:radial-gradient(440px circle at var(--mx,50%) var(--my,50%),rgba(200,168,75,0.10),transparent 60%);transition:opacity 300ms ease}
+.r-item:hover{border-color:var(--line-2);transform:translateY(-3px)}
+.r-item:hover::before{opacity:1}
+.r-metric{font-family:var(--font-mono);font-size:clamp(34px,4vw,46px);font-weight:400;color:var(--gold);line-height:1;letter-spacing:-0.02em;margin-bottom:13px}
+.r-context{font-size:14px;color:var(--muted-2);line-height:1.6;margin-bottom:18px}
+.r-quote{font-family:var(--font-serif);font-style:italic;font-size:17px;color:var(--text);line-height:1.55;padding-left:18px;border-left:2px solid var(--gold);margin-bottom:20px;opacity:0.92}
+.r-who{display:flex;align-items:center;gap:11px;position:relative;z-index:1}
+.r-av{width:34px;height:34px;border-radius:50%;background:rgba(200,168,75,0.12);border:1px solid rgba(200,168,75,0.28);font-size:11px;font-weight:600;color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);flex-shrink:0}
+.r-name{font-size:13px;font-weight:500;color:var(--text)}
+.r-role{font-size:12px;color:var(--muted)}
+
+/* ── METHODOLOGY ── */
+#proceso{background:var(--bg-1);position:relative}
+#proceso .section{display:grid;grid-template-columns:380px 1fr;gap:104px;align-items:start}
+.proceso-left{position:sticky;top:100px}
+.p-step{display:grid;grid-template-columns:54px 1fr;border-top:1px solid var(--line);padding:36px 0;transition:padding-left 350ms var(--ease)}
+.p-step:last-child{border-bottom:1px solid var(--line)}
+.p-step:hover{padding-left:16px}
+.p-num{font-family:var(--font-mono);font-size:12px;color:var(--gold);padding-top:6px}
+.p-title{font-size:20px;font-weight:500;margin-bottom:11px;letter-spacing:-0.01em}
+.p-desc{font-size:14px;color:var(--muted-2);line-height:1.7}
+
+/* ── INCLUDES ── */
+#incluye .grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:76px}
+.inc-item{position:relative;background:rgba(255,255,255,0.014);border:1px solid var(--line);border-radius:18px;padding:38px 32px;overflow:hidden;transition:border-color 300ms ease,transform 400ms var(--ease)}
+.inc-item::before{content:'';position:absolute;inset:0;border-radius:18px;pointer-events:none;opacity:0;background:radial-gradient(380px circle at var(--mx,50%) var(--my,50%),rgba(200,168,75,0.10),transparent 55%);transition:opacity 300ms ease}
+.inc-item:hover{border-color:var(--line-2);transform:translateY(-4px)}
+.inc-item:hover::before{opacity:1}
+.inc-icon{width:46px;height:46px;border-radius:12px;border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;margin-bottom:1.6rem;color:var(--gold);position:relative;z-index:1;background:rgba(200,168,75,0.05)}
+.inc-icon svg{width:21px;height:21px}
+.inc-num{font-family:var(--font-mono);font-size:11px;color:var(--muted);position:absolute;top:30px;right:30px;z-index:1}
+.inc-title{font-size:18px;font-weight:500;margin-bottom:10px;letter-spacing:-0.01em;position:relative;z-index:1}
+.inc-desc{font-size:13px;color:var(--muted-2);line-height:1.65;position:relative;z-index:1}
+
+/* ── FAQ ── */
+#faq{background:var(--bg-1)}
+.faq-inner{max-width:720px;margin:76px auto 0}
+.faq-row{border-top:1px solid var(--line)}
+.faq-row:last-child{border-bottom:1px solid var(--line)}
+.faq-q{width:100%;background:none;border:none;text-align:left;padding:28px 0;font-size:17px;font-weight:500;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:18px;font-family:var(--font-sans);letter-spacing:-0.01em;transition:color 180ms ease}
+.faq-q:hover{color:var(--gold)}
+.faq-arrow{position:relative;width:15px;height:15px;flex-shrink:0}
+.faq-arrow::before,.faq-arrow::after{content:'';position:absolute;background:var(--gold);transition:transform 300ms var(--ease)}
+.faq-arrow::before{top:6.5px;left:0;width:15px;height:2px}
+.faq-arrow::after{top:0;left:6.5px;width:2px;height:15px}
+.faq-row.open .faq-arrow::after{transform:scaleY(0)}
+.faq-a{overflow:hidden;max-height:0;transition:max-height 400ms var(--ease)}
+.faq-row.open .faq-a{max-height:340px}
+.faq-a-inner{padding-bottom:28px;font-size:15px;color:var(--muted-2);line-height:1.75}
+
+/* ── CTA ── */
+#agendar{padding:180px 44px;text-align:center;max-width:1240px;margin:0 auto;position:relative;overflow:hidden}
+.cta-glow{position:absolute;top:50%;left:50%;width:760px;height:420px;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(200,168,75,0.13),transparent 68%);filter:blur(14px);pointer-events:none;z-index:0}
+.cta-bg-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-weight:600;font-size:clamp(80px,15vw,210px);color:rgba(200,168,75,0.035);letter-spacing:-0.04em;white-space:nowrap;pointer-events:none;z-index:0;user-select:none}
+.cta-inner{position:relative;z-index:1}
+.cta-tag{font-family:var(--font-mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;display:inline-flex;align-items:center;gap:12px}
+.cta-tag::before,.cta-tag::after{content:'';width:24px;height:1px;background:var(--gold)}
+.cta-h2{font-size:clamp(48px,7vw,98px);font-weight:500;letter-spacing:-0.03em;line-height:1;margin-bottom:1.85rem}
+.cta-h2 em{font-weight:300;color:var(--gold)}
+.cta-sub{font-size:17px;color:var(--muted-2);max-width:460px;margin:0 auto 3rem;line-height:1.65}
+.cta-note{margin-top:1.5rem;font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--line);padding:34px 44px;display:flex;align-items:center;justify-content:space-between;max-width:1240px;margin:0 auto;flex-wrap:wrap;gap:14px}
+.f-logo{font-size:14px;font-weight:600;letter-spacing:0.14em;color:var(--muted-2);text-decoration:none;display:flex;align-items:center;gap:9px}
+.f-copy{font-size:12px;color:var(--muted)}
+
+/* ── KEYFRAMES / UTILS ── */
+@keyframes up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+::selection{background:rgba(200,168,75,0.28);color:var(--text)}
+a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offset:4px;border-radius:4px}
+
+/* ── CENTERED LAYOUT ── */
+.center{text-align:center}
+.center .s-p,.center .btn-main{margin-left:auto;margin-right:auto}
+
+.r-header{position:static!important;text-align:center;margin-bottom:8px}
+.r-header .s-p{margin-left:auto;margin-right:auto}
+.results-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:56px}
+.r-item{width:356px;max-width:100%;text-align:center}
+.r-quote{border-left:none;padding-left:0;font-size:18px;margin-top:4px}
+.r-who{justify-content:center}
+
+#proceso .section{display:block;text-align:center}
+.proceso-left{position:static!important;margin-bottom:54px}
+.proceso-left .s-p{margin-left:auto;margin-right:auto}
+.proceso-steps{max-width:680px;margin:0 auto}
+.p-step{display:block;grid-template-columns:none;text-align:center;padding:32px 0}
+.p-step:hover{padding-left:0}
+.p-num{padding-top:0;margin-bottom:13px;display:block}
+
+#incluye .section{text-align:center}
+#incluye .s-p{margin-left:auto;margin-right:auto}
+.inc-item{text-align:center;display:flex;flex-direction:column;align-items:center;width:360px;max-width:100%}
+.inc-num{position:static;order:-1;margin-bottom:14px}
+.inc-icon{margin-left:0;margin-right:0}
+
+.cal-wrap{max-width:760px;margin:3rem auto 0;border:1px solid var(--line-2);border-radius:18px;overflow:hidden;background:var(--bg-1);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05),0 30px 70px -40px rgba(0,0,0,0.9)}
+.cal-wrap .calendly-inline-widget{border-radius:18px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1080px){#resultados .inner{grid-template-columns:1fr;gap:48px}.r-header{position:static}}
+@media(max-width:900px){
+  nav{padding:0 20px}
+  .nav-right .nav-link{display:none}
+  #hero{padding:108px 20px 76px;min-height:auto}
+  .hero-stats{flex-wrap:wrap;max-width:430px}
+  .hs{flex:1 1 50%}
+  .hs:nth-child(even){border-right:none}
+  .hs:nth-child(3),.hs:nth-child(4){border-top:1px solid var(--line)}
+  #proceso .section{grid-template-columns:1fr;gap:48px}
+  .proceso-left{position:static}
+  #incluye .grid{grid-template-columns:1fr 1fr}
+  .section{padding:92px 20px}
+  #manifesto{padding:104px 20px}
+  #agendar{padding:116px 20px}
+  footer{padding:30px 20px}
+}
+@media(max-width:600px){
+  nav{height:58px;padding:0 16px}
+  nav.scrolled{height:54px}
+  .logo{font-size:14px}
+  .nav-btn{padding:9px 16px;font-size:12px}
+  #hero{padding:98px 18px 64px}
+  .hero-badge{margin-bottom:2rem;font-size:10px;padding:8px 15px}
+  .hero-h1{font-size:clamp(36px,10vw,54px);letter-spacing:-0.02em;margin-bottom:1.6rem}
+  .hero-p{font-size:15px}
+  .hero-actions{flex-direction:column;width:100%;gap:14px}
+  .btn-main{width:100%;justify-content:center}
+  .btn-ghost{padding:6px}
+  .hero-stats{margin-top:3.25rem;max-width:100%}
+  .hs{padding:22px 14px}
+  .hs-num{font-size:25px}
+  .hs-label{font-size:11px}
+  .scroll-cue{display:none}
+  .kw{gap:12px 20px;padding:20px 16px}
+  .kw span{font-size:10px;gap:20px}
+  .manifesto-txt{font-size:clamp(23px,6.6vw,33px);line-height:1.36}
+  .section{padding:74px 18px}
+  #manifesto{padding:82px 18px}
+  .s-h2{font-size:clamp(31px,8.5vw,42px)}
+  .s-p{font-size:15px}
+  #resultados .inner{gap:36px}
+  .r-item{padding:30px 24px}
+  .r-metric{font-size:32px}
+  .r-quote{font-size:16px}
+  #incluye .grid{grid-template-columns:1fr}
+  .inc-item{padding:32px 26px}
+  .p-step{grid-template-columns:42px 1fr;padding:30px 0}
+  .p-step:hover{padding-left:0}
+  .p-title{font-size:18px}
+  .faq-q{font-size:16px;padding:24px 0}
+  #agendar{padding:94px 18px}
+  .cta-h2{font-size:clamp(40px,11vw,62px)}
+  .cta-sub{font-size:15px}
+  .cta-bg-text{font-size:clamp(60px,24vw,130px)}
+  footer{padding:26px 18px;flex-direction:column;align-items:flex-start}
+}
+@media(hover:none) and (pointer:coarse){.r-item:hover,.inc-item:hover,.btn-main:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}
+  .hero-h1 .ln>span,.hero-badge,.hero-p,.hero-actions,.hero-stats,.scroll-cue{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<canvas id="fx"></canvas>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo"><span class="logo-dot"></span>BLINDSPOT</a>
+  <div class="nav-right">
+    <a href="#resultados" class="nav-link">Resultados</a>
+    <a href="#proceso" class="nav-link">Metodología</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+    <a href="#agendar" class="nav-btn">Agendar llamada</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="b-dot"></span>Consultoría 1:1 · <b>Cupos limitados</b></div>
+    <h1 class="hero-h1">
+      <span class="ln"><span>Escalá tu negocio<span style="white-space:nowrap"> online a</span></span></span>
+      <span class="ln"><span class="shine">$10.000 – $50.000 USD</span></span>
+      <span class="ln"><span>al mes en 120 días.</span></span>
+    </h1>
+    <p class="hero-p">Un sistema probado para llevar tu negocio a una facturación mensual predecible — sin depender de la suerte ni de tácticas que no escalan.</p>
+    <div class="hero-actions">
+      <a href="#agendar" class="btn-main" data-magnetic>Quiero una sesión gratis
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a href="#proceso" class="btn-ghost">Ver cómo trabajamos
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll<div class="line"></div></div>
+</section>
+
+<!-- MANIFESTO -->
+<section id="manifesto">
+  <p class="manifesto-txt" id="manifesto-txt">La mayoría de los negocios no fracasan por falta de esfuerzo. Fracasan por no ver <em>lo que tienen delante.</em></p>
+</section>
+
+<!-- RESULTS -->
+<section id="resultados">
+  <div class="section" style="padding-top:40px">
+    <div class="r-header center">
+      <div class="s-label rev">Resultados</div>
+      <h2 class="s-h2 rev">Números <em>reales.</em> Sin editar.</h2>
+      <p class="s-p rev">Clientes verificables. Métricas concretas. Nada de porcentajes inventados.</p>
+    </div>
+    <div class="results-grid">
+      <div class="r-item rev spot"><div class="r-metric">+218%</div><p class="r-context">Revenue neto en 4 meses</p><p class="r-quote">"Blindspot identificó en dos semanas lo que no pudimos ver en dos años."</p><div class="r-who"><div class="r-av">MR</div><div><div class="r-name">Martín Reyes</div><div class="r-role">CEO · SaaS B2B</div></div></div></div>
+      <div class="r-item rev spot"><div class="r-metric">$340K</div><p class="r-context">Contratos nuevos — primer trimestre</p><p class="r-quote">"Pensábamos que el problema era de ventas. Era de posicionamiento."</p><div class="r-who"><div class="r-av">SL</div><div><div class="r-name">Sofía Lamas</div><div class="r-role">Fundadora · Agencia Digital</div></div></div></div>
+      <div class="r-item rev spot"><div class="r-metric">4.2×</div><p class="r-context">ROAS en canales pagos</p><p class="r-quote">"No es consultoría genérica. Es trabajo estratégico real."</p><div class="r-who"><div class="r-av">JP</div><div><div class="r-name">Javier Peralta</div><div class="r-role">CMO · E-commerce</div></div></div></div>
+      <div class="r-item rev spot"><div class="r-metric">−60%</div><p class="r-context">Costo de adquisición de clientes</p><p class="r-quote">"Íbamos a gastar $200K en la campaña equivocada. Nos lo ahorraron."</p><div class="r-who"><div class="r-av">VN</div><div><div class="r-name">Nombre reservado</div><div class="r-role">Director · Servicios</div></div></div></div>
+      <div class="r-item rev spot"><div class="r-metric">2 años</div><p class="r-context">De trabajo condensado en 120 días</p><p class="r-quote">"La velocidad de ejecución superó lo que habíamos hecho en dos años."</p><div class="r-who"><div class="r-av">AC</div><div><div class="r-name">Agustina Crespo</div><div class="r-role">COO · Scale-up</div></div></div></div>
+    </div>
+    <div class="rev center" style="margin-top:48px">
+      <a href="#agendar" class="btn-main" data-magnetic>Ver si calificás</a>
+    </div>
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<div id="proceso" style="margin-top:60px">
+  <div class="section">
+    <div class="proceso-left">
+      <div class="s-label rev">Metodología</div>
+      <h2 class="s-h2 rev">Cómo<br>trabajamos.</h2>
+      <p class="s-p rev" style="margin-top:1.5rem">Sin frameworks genéricos. Un proceso propietario afinado en 47 proyectos.</p>
+    </div>
+    <div class="proceso-steps">
+      <div class="p-step rev"><span class="p-num">01</span><div><div class="p-title">Diagnóstico de puntos ciegos</div><p class="p-desc">Identificamos con precisión las brechas entre dónde está tu negocio y dónde debería estar. Sin suposiciones, con datos duros y análisis cualitativo profundo.</p></div></div>
+      <div class="p-step rev"><span class="p-num">02</span><div><div class="p-title">Diseño de la estrategia</div><p class="p-desc">Co-creamos un plan de acción específico para tu contexto. Prioridades claras, hitos medibles a 30, 60 y 90 días. Sin vaguedades.</p></div></div>
+      <div class="p-step rev"><span class="p-num">03</span><div><div class="p-title">Implementación acompañada</div><p class="p-desc">No te dejamos con un PDF y desaparecemos. Trabajamos junto a tu equipo durante la ejecución para garantizar que los resultados ocurran.</p></div></div>
+      <div class="p-step rev"><span class="p-num">04</span><div><div class="p-title">Sistemas que perduran</div><p class="p-desc">Instalamos los procesos, métricas y capacidades para que el crecimiento sea sostenible mucho después de que terminemos de trabajar juntos.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- INCLUDES -->
+<section id="incluye">
+  <div class="section">
+    <div class="s-label rev">El programa</div>
+    <h2 class="s-h2 rev">Todo lo que<br><em>obtenés.</em></h2>
+    <p class="s-p rev" style="margin-top:1rem">Un ecosistema completo de recursos, acompañamiento y herramientas.</p>
+    <div class="grid">
+      <div class="inc-item rev spot"><div class="inc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg></div><div class="inc-num">01</div><div class="inc-title">Diagnóstico 360°</div><p class="inc-desc">Análisis completo de tu modelo, posicionamiento, equipo y métricas. El mapa exacto de tus puntos ciegos.</p></div>
+      <div class="inc-item rev spot"><div class="inc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></div><div class="inc-num">02</div><div class="inc-title">Sesiones 1:1 semanales</div><p class="inc-desc">Acceso directo al equipo senior de Blindspot. Sin intermediarios, sin juniors.</p></div>
+      <div class="inc-item rev spot"><div class="inc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="inc-num">03</div><div class="inc-title">Playbook propietario</div><p class="inc-desc">Documentación detallada de tu estrategia y sistemas. Un activo que vale más que el programa.</p></div>
+      <div class="inc-item rev spot"><div class="inc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="inc-num">04</div><div class="inc-title">Dashboard de métricas</div><p class="inc-desc">Sistema de KPIs personalizado. Claridad total sobre qué mover, cuándo y por qué — en tiempo real.</p></div>
+      <div class="inc-item rev spot"><div class="inc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div><div class="inc-num">05</div><div class="inc-title">Soporte entre sesiones</div><p class="inc-desc">Canal directo para consultas urgentes, revisión de documentos y feedback en tiempo real.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENDAR -->
+<section id="agendar">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <div class="cta-tag rev">Empezá hoy</div>
+    <h2 class="cta-h2 rev">30 minutos.<br><em>Una decisión.</em></h2>
+    <p class="cta-sub rev">Sesión de diagnóstico gratuita con el equipo senior de Blindspot. Elegí el horario que mejor te quede.</p>
+    <div class="cal-wrap">
+      <div class="calendly-inline-widget" data-url="https://calendly.com/facusamuelpm/30min?hide_gdpr_banner=1&background_color=0b0b0a&text_color=f4efe6&primary_color=c8a84b" style="min-width:320px;height:700px;"></div>
+    </div>
+    <p class="cta-note rev">Gratis · Sin compromiso · 30 min</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section">
+    <div style="text-align:center">
+      <div class="s-label rev" style="justify-content:center">FAQ</div>
+      <h2 class="s-h2 rev">Lo que todos<br><em>preguntan.</em></h2>
+    </div>
+    <div class="faq-inner">
+      <div class="faq-row"><button class="faq-q">¿Qué tipo de empresas trabajan con Blindspot? <span class="faq-arrow"></span></button><div class="faq-a"><p class="faq-a-inner">Principalmente con dueños de negocios online o de productos físicos que quieren escalar de manera sostenible. No somos la opción correcta si estás arrancando desde cero.</p></div></div>
+      <div class="faq-row"><button class="faq-q">¿Cuánto tiempo requiere el programa? <span class="faq-arrow"></span></button><div class="faq-a"><p class="faq-a-inner">El programa base es de 120 días. Requiere entre 3 y 5 horas semanales de tu parte, más las sesiones de 60 minutos. Es intensivo porque los resultados lo son.</p></div></div>
+      <div class="faq-row"><button class="faq-q">¿En qué se diferencia de otras consultoras? <span class="faq-arrow"></span></button><div class="faq-a"><p class="faq-a-inner">La mayoría te entregan un informe y desaparecen. Nosotros nos quedamos durante la ejecución. Nuestro éxito está atado al tuyo — nuestro modelo está orientado a resultados.</p></div></div>
+      <div class="faq-row"><button class="faq-q">¿Cuándo veo los primeros resultados? <span class="faq-arrow"></span></button><div class="faq-a"><p class="faq-a-inner">La mayoría reporta cambios tangibles en los primeros 30 días: mayor claridad, decisiones más rápidas, primeras ganancias de eficiencia. El nivel de compromiso que tengan a la hora de ejecutar puede acelerar o demorar el proceso.</p></div></div>
+      <div class="faq-row"><button class="faq-q">¿Tienen garantía? <span class="faq-arrow"></span></button><div class="faq-a"><p class="faq-a-inner">Sí. Si al final del programa no alcanzamos los objetivos definidos al inicio, devolvemos el 100% de la inversión. En 2 años nunca tuvimos que aplicarla — pero existe.</p></div></div>
+      <div class="faq-row"><button class="faq-q">¿Cómo es la llamada gratuita? <span class="faq-arrow"></span></button><div class="faq-a"><p class="faq-a-inner">30 minutos directamente con Facu. Analizamos tu situación, identificamos los dos o tres puntos ciegos más críticos, y evaluamos si hay fit para trabajar juntos. Sin pitch ni presión. Te vas con valor independientemente del resultado.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="f-logo"><span class="logo-dot"></span>BLINDSPOT</a>
+  <p class="f-copy">© 2026 Blindspot Consultora</p>
+</footer>
+
+<script>
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── PARTICLES ── */
+(function(){
+  const canvas = document.getElementById('fx');
+  const ctx = canvas.getContext('2d');
+  let w,h,dpr,parts=[],raf;
+  function size(){
+    dpr = Math.min(window.devicePixelRatio||1, 2);
+    w = canvas.width = innerWidth*dpr;
+    h = canvas.height = innerHeight*dpr;
+    canvas.style.width = innerWidth+'px';
+    canvas.style.height = innerHeight+'px';
+  }
+  function make(){
+    const big = Math.random()<0.14;
+    return {
+      x:Math.random()*w, y:Math.random()*h,
+      r:(big? 1.8+Math.random()*1.6 : 0.4+Math.random()*1.1)*dpr,
+      vx:(Math.random()-0.5)*0.10*dpr,
+      vy:(-0.04-Math.random()*0.13)*dpr,
+      a: big? 0.22+Math.random()*0.18 : 0.06+Math.random()*0.2,
+      big
+    };
+  }
+  function init(){ parts=[]; const n=Math.min(58, Math.floor(innerWidth/24)); for(let i=0;i<n;i++) parts.push(make()); }
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(const p of parts){
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.y<-12) p.y=h+12;
+      if(p.x<-12) p.x=w+12;
+      if(p.x>w+12) p.x=-12;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,6.283);
+      ctx.fillStyle = p.big ? `rgba(244,232,196,${p.a})` : `rgba(200,168,75,${p.a})`;
+      ctx.fill();
+    }
+    raf = requestAnimationFrame(draw);
+  }
+  size(); init();
+  if(reduce){ draw(); cancelAnimationFrame(raf); }
+  else draw();
+  let t;
+  addEventListener('resize', ()=>{ clearTimeout(t); t=setTimeout(()=>{ size(); init(); }, 200); });
+  document.addEventListener('visibilitychange', ()=>{
+    if(reduce) return;
+    if(document.hidden){ cancelAnimationFrame(raf); }
+    else { cancelAnimationFrame(raf); draw(); }
+  });
+})();
+
+/* ── SCROLL PROGRESS + NAV ── */
+const nav = document.getElementById('nav');
+const progress = document.getElementById('progress');
+function onScroll(){
+  const h = document.documentElement;
+  const sc = h.scrollTop / (h.scrollHeight - h.clientHeight);
+  progress.style.width = (sc*100)+'%';
+  nav.classList.toggle('scrolled', h.scrollTop>30);
+}
+addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+
+/* ── REVEAL ── */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('vis'), i*70); io.unobserve(e.target); } });
+},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rev').forEach(el=>io.observe(el));
+
+/* ── COUNT UP ── */
+function countUp(el){
+  const target=parseFloat(el.dataset.target), pre=el.dataset.prefix||'', suf=el.dataset.suffix||'', dur=1500, start=performance.now();
+  function tick(now){ const p=Math.min((now-start)/dur,1), e=1-Math.pow(1-p,3); el.textContent=pre+Math.round(target*e)+suf; if(p<1) requestAnimationFrame(tick); }
+  requestAnimationFrame(tick);
+}
+const cio = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ countUp(e.target); cio.unobserve(e.target); } }); },{threshold:0.5});
+document.querySelectorAll('[data-count]').forEach(el=>{ if(reduce){ el.textContent=(el.dataset.prefix||'')+el.dataset.target+(el.dataset.suffix||''); } else cio.observe(el); });
+
+/* ── SPOTLIGHT + MAGNETIC ── */
+if(!reduce){
+  document.querySelectorAll('.spot').forEach(card=>{
+    card.addEventListener('pointermove', ev=>{ const r=card.getBoundingClientRect(); card.style.setProperty('--mx',(ev.clientX-r.left)+'px'); card.style.setProperty('--my',(ev.clientY-r.top)+'px'); });
+  });
+  document.querySelectorAll('[data-magnetic]').forEach(btn=>{
+    btn.addEventListener('pointermove', ev=>{ const r=btn.getBoundingClientRect(); const x=ev.clientX-r.left-r.width/2, y=ev.clientY-r.top-r.height/2; btn.style.transform=`translate(${x*0.28}px, ${y*0.28}px)`; });
+    btn.addEventListener('pointerleave', ()=>{ btn.style.transform=''; });
+  });
+}
+
+/* ── MANIFESTO WORD REVEAL ── */
+(function(){
+  const el=document.getElementById('manifesto-txt');
+  const tmp=document.createElement('div'); tmp.innerHTML=el.innerHTML;
+  (function wrap(node){
+    node.childNodes.forEach(child=>{
+      if(child.nodeType===3){
+        const frag=document.createDocumentFragment();
+        child.textContent.split(/(\s+)/).forEach(tok=>{ if(tok.trim()===''){frag.appendChild(document.createTextNode(tok));} else {const s=document.createElement('span'); s.className='w'; s.textContent=tok; frag.appendChild(s);} });
+        node.replaceChild(frag,child);
+      } else if(child.nodeType===1){ child.classList.add('w'); }
+    });
+  })(tmp);
+  el.innerHTML=tmp.innerHTML;
+  const words=Array.from(el.querySelectorAll('.w'));
+  if(reduce){ words.forEach(w=>w.classList.add('lit')); return; }
+  const mio=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ words.forEach((w,i)=>setTimeout(()=>w.classList.add('lit'), i*55)); mio.disconnect(); } }); },{threshold:0.5});
+  mio.observe(el);
+})();
+
+/* ── FAQ ── */
+document.querySelectorAll('.faq-q').forEach(btn=>{
+  btn.addEventListener('click', ()=>{ const row=btn.closest('.faq-row'); const open=row.classList.contains('open'); document.querySelectorAll('.faq-row.open').forEach(r=>r.classList.remove('open')); if(!open) row.classList.add('open'); });
+});
+</script>
+<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+</body>
+</html>
